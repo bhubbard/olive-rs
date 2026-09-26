@@ -1,0 +1,8 @@
+[package]
+name = "olive-rs"
+version = "0.1.0"
+edition = "2021"
+description = "Node-based video compositing and non-linear editing graph engine inspired by Olive"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
