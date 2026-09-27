@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>olive-rs | Pure Rust Node-Based Video Compositor & Timeline Editor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="logo-icon">🫒</span>
+      <span class="logo-title">olive-rs</span>
+      <span class="badge">v0.0.1</span>
+      <span class="badge badge-rust">Pure Rust</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#node-studio">Node Graph</a>
+      <a href="#timeline-studio">Timeline</a>
+      <a href="#project-inspector">Project JSON</a>
+      <a href="https://github.com/bhubbard/olive-rs" target="_blank" class="github-btn">
+        <svg height="18" viewBox="0 0 16 16" width="18" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        GitHub
+      </a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Node-Based Video Compositing & Timeline Editor in Pure Rust</h1>
+        <p class="subtitle">
+          High-performance DAG compositing pipeline, rational timecode engine, Bezier keyframe curve interpolation,
+          and non-linear timeline editing with full undo/redo architecture inspired by <strong>Olive Video Editor</strong>.
+        </p>
+        <div class="hero-actions">
+          <a href="#node-studio" class="cta-primary">Launch Node Studio</a>
+          <a href="#timeline-studio" class="cta-secondary">Inspect Timeline</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Pure Rust DAG</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">0ms</span>
+          <span class="stat-label">GC Overhead</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">Exact</span>
+          <span class="stat-label">Rational 64 Time</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">15/15</span>
+          <span class="stat-label">Upstream Parity Tests</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Node Compositing Studio -->
+    <section id="node-studio" class="studio-section">
+      <div class="section-header">
+        <h2>Visual Node Graph Compositor</h2>
+        <p>Interactive Directed Acyclic Graph (DAG) evaluating nodes topologically in real-time onto the HTML5 Canvas.</p>
+      </div>
+
+      <div class="studio-grid">
+        <div class="viewport-card">
+          <div class="card-header">
+            <span>Composited Output Canvas</span>
+            <div class="canvas-meta">
+              <span id="fps-counter">30 fps</span>
+              <span id="res-badge">640x360</span>
+            </div>
+          </div>
+          <div class="canvas-wrapper">
+            <canvas id="render-canvas" width="640" height="360"></canvas>
+          </div>
+          <div class="transport-controls">
+            <button id="btn-play" class="btn">▶ Play</button>
+            <button id="btn-reset" class="btn">↺ Reset</button>
+            <input type="range" id="timeline-slider" min="0" max="120" value="0" class="slider">
+            <span id="frame-display" class="timecode">Frame 0 (00:00:00;00)</span>
+          </div>
+        </div>
+
+        <div class="controls-card">
+          <div class="card-header">
+            <span>Active Node Parameters</span>
+            <span class="badge" id="active-node-name">TransformDistortNode</span>
+          </div>
+          <div class="node-controls-body">
+            <div class="control-group">
+              <label>Rotation Angle: <span id="val-rot">0°</span></label>
+              <input type="range" id="param-rot" min="0" max="360" value="0" class="slider">
+            </div>
+            <div class="control-group">
+              <label>Scale Factor: <span id="val-scale">1.0x</span></label>
+              <input type="range" id="param-scale" min="0.2" max="2.0" step="0.05" value="1.0" class="slider">
+            </div>
+            <div class="control-group">
+              <label>Position X: <span id="val-posx">0 px</span></label>
+              <input type="range" id="param-posx" min="-150" max="150" value="0" class="slider">
+            </div>
+            <div class="control-group">
+              <label>Crop Left: <span id="val-crop">0%</span></label>
+              <input type="range" id="param-crop" min="0" max="80" value="0" class="slider">
+            </div>
+            <div class="control-group">
+              <label>Merge Blend Mode:</label>
+              <select id="param-blend" class="select-input">
+                <option value="normal">Normal (Alpha Over)</option>
+                <option value="multiply">Multiply</option>
+                <option value="screen">Screen</option>
+                <option value="overlay">Overlay</option>
+                <option value="add">Add</option>
+                <option value="difference">Difference</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Foreground Opacity: <span id="val-opac">90%</span></label>
+              <input type="range" id="param-opac" min="0" max="100" value="90" class="slider">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Node Graph Flowchart -->
+      <div class="graph-flow-card">
+        <div class="card-header">
+          <span>Active Directed Acyclic Graph (DAG) Pipeline</span>
+          <span class="status-indicator">Topological Execution Order: Solid → Transform → Crop → Merge → Sequence Output</span>
+        </div>
+        <div class="nodes-flow-container">
+          <div class="node-box" id="node-bg">
+            <div class="node-title">SolidGeneratorNode</div>
+            <div class="node-subtitle">Navy Background (0.05, 0.1, 0.25)</div>
+            <div class="node-pins"><span class="pin-out">● tex_out</span></div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="node-box" id="node-fg">
+            <div class="node-title">SolidGeneratorNode</div>
+            <div class="node-subtitle">Amber Box (0.95, 0.65, 0.15)</div>
+            <div class="node-pins"><span class="pin-out">● tex_out</span></div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="node-box active-node" id="node-xform">
+            <div class="node-title">TransformDistortNode</div>
+            <div class="node-subtitle">Rot: 0° | Scale: 1.0x</div>
+            <div class="node-pins"><span class="pin-in">● tex_in</span> | <span class="pin-out">● tex_out</span></div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="node-box" id="node-crop">
+            <div class="node-title">CropDistortNode</div>
+            <div class="node-subtitle">Left: 0%</div>
+            <div class="node-pins"><span class="pin-in">● tex_in</span> | <span class="pin-out">● tex_out</span></div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="node-box" id="node-merge">
+            <div class="node-title">MergeNode</div>
+            <div class="node-subtitle">Blend: Normal</div>
+            <div class="node-pins"><span class="pin-in">● base / blend</span> | <span class="pin-out">● tex_out</span></div>
+          </div>
+          <div class="flow-arrow">➔</div>
+          <div class="node-box" id="node-seq">
+            <div class="node-title">SequenceNode</div>
+            <div class="node-subtitle">Master Output 640x360</div>
+            <div class="node-pins"><span class="pin-in">● tex_in</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Studio -->
+    <section id="timeline-studio" class="studio-section">
+      <div class="section-header">
+        <h2>Non-Linear Timeline & Command History</h2>
+        <p>Interactive multi-track editing, trimming, gap consolidation, and undo/redo state machine.</p>
+      </div>
+
+      <div class="timeline-container">
+        <div class="timeline-toolbar">
+          <button id="btn-undo" class="btn" disabled>↶ Undo</button>
+          <button id="btn-redo" class="btn" disabled>↷ Redo</button>
+          <div class="timeline-actions">
+            <button id="btn-trim-in" class="btn btn-secondary">Trim In (Clip 2)</button>
+            <button id="btn-trim-out" class="btn btn-secondary">Trim Out (Clip 2)</button>
+            <button id="btn-replace-gap" class="btn btn-secondary">Replace Clip with Gap</button>
+            <button id="btn-insert-gap" class="btn btn-secondary">Insert Gap at Start</button>
+          </div>
+        </div>
+
+        <div class="tracks-wrapper">
+          <div class="track-header">
+            <span class="track-title">V1 (Video 1)</span>
+          </div>
+          <div class="track-timeline" id="track-v1">
+            <!-- Dynamic timeline blocks -->
+          </div>
+        </div>
+
+        <div class="tracks-wrapper">
+          <div class="track-header">
+            <span class="track-title">A1 (Audio 1)</span>
+          </div>
+          <div class="track-timeline" id="track-a1">
+            <!-- Audio blocks -->
+          </div>
+        </div>
+
+        <div class="history-log">
+          <div class="log-title">Timeline History Log</div>
+          <div id="history-items">
+            <div class="log-item active">Initialized timeline with 3 clips on V1 and A1</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project JSON Inspector -->
+    <section id="project-inspector" class="studio-section">
+      <div class="section-header">
+        <h2>Olive Project Interchange (.ove / JSON)</h2>
+        <p>Bi-directional serialization preserving sequences, tracks, blocks, and node graph connections.</p>
+      </div>
+
+      <div class="json-inspector-card">
+        <div class="card-header">
+          <span>Project Schema (Version 230220)</span>
+          <button id="btn-copy-json" class="btn btn-sm">Copy JSON</button>
+        </div>
+        <pre><code id="json-code" class="language-json"></code></pre>
+      </div>
+    </section>
+
+    <!-- CLI Usage Section -->
+    <section class="studio-section">
+      <div class="section-header">
+        <h2>Headless CLI: olive-render</h2>
+        <p>Render single frames or complete video sequences headlessly in CI/CD and cloud pipelines.</p>
+      </div>
+      <div class="code-card">
+        <pre><code class="language-bash"># Install olive-render via Cargo
+cargo install --path .
+
+# Render a composite 4K UHD frame headlessly
+olive-render render-frame --output frame_001.png --width 3840 --height 2160 --frame 0
+
+# Inspect an Olive project file
+olive-render inspect --project project.ove.json
+
+# Create a new Olive project template
+olive-render new-project --output new_composition.ove.json</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>olive-rs is an open-source project by <a href="https://github.com/bhubbard" target="_blank">Brandon Hubbard</a>. Released under MIT or Apache-2.0.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
