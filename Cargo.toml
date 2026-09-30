@@ -1,6 +1,6 @@
 [package]
 name = "olive-rs"
-version = "0.0.1"
+version = "0.1.0"
 edition = "2021"
 authors = ["Brandon Hubbard <bhubbard@users.noreply.github.com>"]
 description = "Pure Rust node-based video compositing and non-linear editing graph engine inspired by Olive Video Editor"

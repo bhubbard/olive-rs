@@ -7,6 +7,7 @@ use crate::graph::connection::Connection;
 use crate::graph::node::{EvaluationContext, Node, NodeOutputData};
 use crate::graph::pin::PinDirection;
 
+#[derive(Debug, Clone)]
 pub struct Graph {
     pub nodes: HashMap<Uuid, Arc<dyn Node>>,
     pub connections: Vec<Connection>,

@@ -74,6 +74,7 @@ impl Node for SequenceNode {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Sequence {
     pub id: Uuid,
     pub name: String,

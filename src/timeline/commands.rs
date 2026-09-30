@@ -11,6 +11,7 @@ pub enum TrimMode {
 }
 
 /// Trims a block's In or Out point.
+#[derive(Debug, Clone)]
 pub struct BlockTrimCommand {
     block_id: Uuid,
     new_length: Rational64,
@@ -74,6 +75,7 @@ impl BlockTrimCommand {
 
 /// Replaces a block with a gap and handles adjacent/trailing gap consolidation
 /// and transition updates.
+#[derive(Debug, Clone)]
 pub struct TrackReplaceBlockWithGapCommand {
     block_id: Uuid,
     saved_blocks: Option<Vec<Block>>,
@@ -149,6 +151,7 @@ impl TrackReplaceBlockWithGapCommand {
 }
 
 /// Inserts gaps across tracks in a TrackList at a given time offset.
+#[derive(Debug, Clone)]
 pub struct TrackListInsertGaps {
     time: Rational64,
     gap_length: Rational64,
